@@ -1,5 +1,7 @@
 import { create } from "zustand";
 
+const paymentsUrl = import.meta.env.VITE_URL_GET_PAYMENTS;
+
 const usePaymentsStore = create((set) => ({
   payments: [],
   isLoading: false,
@@ -7,9 +9,7 @@ const usePaymentsStore = create((set) => ({
   fetchPayments: async () => {
     try {
       set({ isLoading: true, error: null });
-      const response = await fetch(
-        "https://lzey6nhtd6.execute-api.us-east-1.amazonaws.com/dev/bill"
-      );
+      const response = await fetch(paymentsUrl);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
