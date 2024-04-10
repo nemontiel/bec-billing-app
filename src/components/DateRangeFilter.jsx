@@ -16,10 +16,11 @@ const DateRangeFilter = () => {
 
   function handleClick() {
     fetchDateRange(start, end);
+    console.log(`${start} ${end}`);
   }
 
   return (
-    <Box display="flex" justifyContent="center" gap={4}>
+    <Box className="flex flex-row justify-center gap-5 py-2">
       <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
         <DatePicker
           label="Desde"
@@ -31,7 +32,7 @@ const DateRangeFilter = () => {
           maxDate={today}
         />
       </LocalizationProvider>
-      <Button variant="contained" size="medium" onClick={handleClick}>
+      <Button variant="contained" disableElevation onClick={handleClick}>
         Buscar
       </Button>
     </Box>

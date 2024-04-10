@@ -9,7 +9,7 @@ const Payments = () => {
   return route !== "authenticated" ? (
     <Navigate to="/" replace={true} />
   ) : (
-    <div>
+    <div className="p-10">
       <DateRangeFilter />
       <PaymentsTable />
     </div>

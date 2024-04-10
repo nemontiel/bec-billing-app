@@ -65,21 +65,10 @@ function App() {
       <Navigate to="/pagos" replace={true} />
     </div>
   ) : (
-    <div>
-      <Authenticator hideSignUp={true}>
-        {({ signOut, user }) => (
-          <main>
-            <button onClick={signOut}>Cerrar Sesión</button>
-          </main>
-        )}
-      </Authenticator>
+    <div className="content-center w-full h-screen">
+      <Authenticator hideSignUp={true}></Authenticator>
     </div>
   );
 }
-
-App.propTypes = {
-  signOut: PropTypes.func,
-  user: PropTypes.object,
-};
 
 export default App;

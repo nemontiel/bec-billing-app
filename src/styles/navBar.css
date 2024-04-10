@@ -1,12 +1,17 @@
 .navbar {
-  position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 100rem;
   background-color: #333; /* Color de fondo del navbar */
   color: #fff; /* Color del texto del navbar */
   padding: 10px 20px; /* Espaciado interno */
-  z-index: 999; /* Z-index para asegurar que el navbar esté por encima de otros elementos */
+   {
+     {
+      /* z-index: 999; */
+    }
+  } /* Z-index para asegurar que el navbar esté por encima de otros elementos */
+  display: flex;
+  flex-direction: row;
 }
 
 .navbar ul {

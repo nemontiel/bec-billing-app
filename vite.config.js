@@ -7,10 +7,9 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target:
-          "https://lzey6nhtd6.execute-api.us-east-1.amazonaws.com/dev/bills/date/range",
+        target: "https://apidev.bolchile.com/v2/bills/date/range",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, "/dev/bills/date/range"),
+        rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
   },

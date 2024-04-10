@@ -4,7 +4,6 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
 import Paper from "@mui/material/Paper";
 import { useEffect, useState } from "react";
@@ -17,6 +16,7 @@ import Button from "@mui/material/Button";
 import { useRef } from "react";
 import { utils, writeFileXLSX } from "xlsx";
 import dayjs from "dayjs";
+import { CSVLink } from "react-csv";
 
 const PaymentsTable = () => {
   const { payments, isLoading, error, fetchPayments } = usePaymentsStore();
@@ -42,21 +42,6 @@ const PaymentsTable = () => {
     return formattedDate;
   };
 
-  const downloadCSV = () => {
-    // Convertir los datos en formato CSV
-    const csvContent =
-      "data:text/csv;charset=utf-8," +
-      payments.map((row) => Object.values(row).join(",")).join("\n");
-    // Crear un enlace temporal y simular el clic para descargar el archivo CSV
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "data.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
   const headers = [
     "Fecha de Pago",
     "Orden de Compra",
@@ -75,6 +60,50 @@ const PaymentsTable = () => {
   useEffect(() => {
     //fetchPayments();
   }, []);
+
+  const downloadCSV = () => {
+    // Convertir los datos en formato CSV
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      payments.map((row) => Object.values(row).join(",")).join("\n");
+    // Crear un enlace temporal y simular el clic para descargar el archivo CSV
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "data.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const convertToCSV = () => {
+    // Agregar los encabezados
+    let csv = headers.join(",") + "\n";
+
+    // Agregar los datos
+    payments.forEach((row) => {
+      const values = headers.map((header) => row[header]);
+      csv += values.join(",") + "\n";
+    });
+
+    return csv;
+  };
+
+  // Función para descargar el archivo CSV
+  const downloadCSV2 = () => {
+    const csv = convertToCSV();
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", "datos.csv");
+      link.style.visibility = "hidden";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -95,7 +124,7 @@ const PaymentsTable = () => {
   }
 
   return (
-    <div>
+    <div className="container py-2">
       <TableContainer component={Paper}>
         <Table ref={tbl}>
           <TableHead>
@@ -134,41 +163,45 @@ const PaymentsTable = () => {
               </TableRow>
             )}
           </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: "Todos", value: -1 }]}
-                colSpan={3}
-                count={payments.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                slotProps={{
-                  select: {
-                    inputProps: {
-                      "aria-label": "filas por página",
-                    },
-                    native: true,
-                  },
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-              />
-            </TableRow>
-          </TableFooter>
         </Table>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25, { label: "Todos", value: -1 }]}
+          colSpan={3}
+          count={payments.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          slotProps={{
+            select: {
+              inputProps: {
+                "aria-label": "filas por página",
+              },
+              native: true,
+            },
+          }}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          ActionsComponent={TablePaginationActions}
+        />
       </TableContainer>
       <Button
+        variant="contained"
         onClick={() => {
           // generate workbook from table element
-          const wb = utils.table_to_book(tbl.current);
+          const wb = utils.table_to_book(tbl.current, {
+            dateNF: "dd-mm-yyyy;@",
+            cellDates: true,
+            raw: true,
+          });
           // write to XLSX
           writeFileXLSX(wb, "SheetJSReactExport.xlsx");
         }}
       >
-        Exportar
+        Descargar
       </Button>
-      <Button onClick={downloadCSV}>CSV</Button>
+      <Button variant="contained" onClick={downloadCSV}>
+        CSV
+      </Button>
+      <CSVLink data={payments}>Descargar CSV</CSVLink>
     </div>
   );
 };
