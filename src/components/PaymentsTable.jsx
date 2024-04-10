@@ -13,11 +13,17 @@ import TablePaginationActions from "./TablePaginationActions";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
+import Button from "@mui/material/Button";
+import { useRef } from "react";
+import { utils, writeFileXLSX } from "xlsx";
+import dayjs from "dayjs";
 
 const PaymentsTable = () => {
   const { payments, isLoading, error, fetchPayments } = usePaymentsStore();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const tbl = useRef(null);
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - payments.length) : 0;
@@ -31,17 +37,25 @@ const PaymentsTable = () => {
     setPage(0);
   };
 
-  function formatDate(stringDate) {
-    const date = new Date(stringDate);
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-
-    const formattedDate = `${day < 10 ? "0" + day : day}-${
-      month < 10 ? "0" + month : month
-    }-${year}`;
+  const formatDate = (date) => {
+    const formattedDate = dayjs(date).format("DD-MM-YYYY");
     return formattedDate;
-  }
+  };
+
+  const downloadCSV = () => {
+    // Convertir los datos en formato CSV
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      payments.map((row) => Object.values(row).join(",")).join("\n");
+    // Crear un enlace temporal y simular el clic para descargar el archivo CSV
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "data.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   const headers = [
     "Fecha de Pago",
@@ -59,7 +73,7 @@ const PaymentsTable = () => {
   ];
 
   useEffect(() => {
-    fetchPayments();
+    //fetchPayments();
   }, []);
 
   if (isLoading) {
@@ -83,7 +97,7 @@ const PaymentsTable = () => {
   return (
     <div>
       <TableContainer component={Paper}>
-        <Table>
+        <Table ref={tbl}>
           <TableHead>
             <TableRow>
               {headers.map((el, idx) => (
@@ -108,7 +122,7 @@ const PaymentsTable = () => {
                 <TableCell>{el.rut}</TableCell>
                 <TableCell>{el.nombre}</TableCell>
                 <TableCell>Apellido</TableCell>
-                <TableCell>{el.es_boleta}</TableCell>
+                <TableCell>{!el.es_boleta ? "Sí" : "No"}</TableCell>
                 <TableCell>Razón Social</TableCell>
                 <TableCell>{el.direccion}</TableCell>
                 <TableCell>{el.comuna}</TableCell>
@@ -144,6 +158,17 @@ const PaymentsTable = () => {
           </TableFooter>
         </Table>
       </TableContainer>
+      <Button
+        onClick={() => {
+          // generate workbook from table element
+          const wb = utils.table_to_book(tbl.current);
+          // write to XLSX
+          writeFileXLSX(wb, "SheetJSReactExport.xlsx");
+        }}
+      >
+        Exportar
+      </Button>
+      <Button onClick={downloadCSV}>CSV</Button>
     </div>
   );
 };

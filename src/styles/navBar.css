@@ -1,0 +1,25 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #333; /* Color de fondo del navbar */
+  color: #fff; /* Color del texto del navbar */
+  padding: 10px 20px; /* Espaciado interno */
+  z-index: 999; /* Z-index para asegurar que el navbar esté por encima de otros elementos */
+}
+
+.navbar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar ul li {
+  display: inline;
+  margin-right: 10px;
+}
+
+.navbar ul li:last-child {
+  margin-right: 0;
+}

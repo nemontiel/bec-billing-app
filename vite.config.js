@@ -7,7 +7,8 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: import.meta.env.VITE_URL_DATE_RANGE,
+        target:
+          "https://lzey6nhtd6.execute-api.us-east-1.amazonaws.com/dev/bills/date/range",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, "/dev/bills/date/range"),
       },

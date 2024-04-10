@@ -1,0 +1,24 @@
+{
+    "Auth": {
+        "Cognito": {
+        
+            "userPoolId": "us-east-1_DlAUtlQbx",
+        
+            "userPoolClientId": "4psf15f1sov4d61ocbvids7l5p",
+        
+            "allowGuestAccess": true,
+       
+            "signUpVerificationMethod": "code", 
+            "loginWith": {
+          
+                " oauth": {
+            
+                "redirectSignIn": ["http://localhost:5173/pagos"],
+                "redirectSignOut": ["http://localhost:5173/"],
+                "responseType": "code"
+                }
+            }
+        }
+    }
+  
+}
