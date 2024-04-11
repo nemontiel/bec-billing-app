@@ -1,6 +1,6 @@
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
@@ -13,12 +13,10 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
-import { styled } from "@mui/material/styles";
 import { useRef } from "react";
 import { utils, writeFileXLSX } from "xlsx";
 import * as XLSX from "xlsx";
 import dayjs from "dayjs";
-import { CSVLink } from "react-csv";
 
 const PaymentsTable = () => {
   const { payments, isLoading, error, fetchPayments } = usePaymentsStore();
@@ -61,50 +59,6 @@ const PaymentsTable = () => {
   useEffect(() => {
     //fetchPayments();
   }, []);
-
-  const downloadCSV = () => {
-    // Convertir los datos en formato CSV
-    const csvContent =
-      "data:text/csv;charset=utf-8," +
-      payments.map((row) => Object.values(row).join(",")).join("\n");
-    // Crear un enlace temporal y simular el clic para descargar el archivo CSV
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "data.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  const convertToCSV = () => {
-    // Agregar los encabezados
-    let csv = headers.join(",") + "\n";
-
-    // Agregar los datos
-    payments.forEach((row) => {
-      const values = headers.map((header) => row[header]);
-      csv += values.join(",") + "\n";
-    });
-
-    return csv;
-  };
-
-  // Función para descargar el archivo CSV
-  const downloadCSV2 = () => {
-    const csv = convertToCSV();
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    if (link.download !== undefined) {
-      const url = URL.createObjectURL(blob);
-      link.setAttribute("href", url);
-      link.setAttribute("download", "datos.csv");
-      link.style.visibility = "hidden";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-  };
 
   const createXlsx = () => {
     const xlsxPayments = formatPayments(payments);
@@ -226,22 +180,11 @@ const PaymentsTable = () => {
         />
       </TableContainer>
       <div className="py-2 flex flex-row justify-end gap-5">
-        {/* <Button
+        <Button
           variant="contained"
-          onClick={() => {
-            // generate workbook from table element
-            const wb = utils.table_to_book(tbl.current, {
-              dateNF: "dd-mm-yyyy;@",
-              cellDates: true,
-              raw: true,
-            });
-            // write to XLSX
-            writeFileXLSX(wb, "SheetJSReactExport.xlsx");
-          }}
+          onClick={createXlsx}
+          sx={{ backgroundColor: "#008fbe" }}
         >
-          Descargar
-        </Button> */}
-        <Button variant="contained" onClick={createXlsx}>
           Descargar
         </Button>
       </div>

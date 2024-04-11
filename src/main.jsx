@@ -6,6 +6,7 @@ import "./index.css";
 import Payments from "./pages/Payments.jsx";
 import NavBar from "./components/NavBar.jsx";
 import { Authenticator, View } from "@aws-amplify/ui-react";
+import NotFound from "./pages/NotFound.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -15,6 +16,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Routes>
           <Route path="/pagos" Component={Payments} />
           <Route path="/" Component={App} />
+          <Route path="*" Component={NotFound} />
         </Routes>
       </BrowserRouter>
     </Authenticator.Provider>

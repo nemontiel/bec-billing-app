@@ -52,7 +52,7 @@ const DateRangeFilter = () => {
           variant="contained"
           disableElevation
           onClick={handleRangeClick}
-          sx={{ height: 36 }}
+          sx={{ height: 36, backgroundColor: "#008fbe" }}
         >
           Buscar
         </Button>

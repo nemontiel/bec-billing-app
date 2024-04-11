@@ -9,7 +9,10 @@ const NavBar = () => {
 
   if (route === "authenticated") {
     return (
-      <nav className="h-20 bg-blue-950 flex flex-row items-center">
+      <nav
+        className="h-20 flex flex-row items-center"
+        style={{ backgroundColor: "#191927" }}
+      >
         <div className="w-1/2 flex justify-start p-5">
           <p className="font-extrabold text-2xl">BEC - Facturación</p>
         </div>
