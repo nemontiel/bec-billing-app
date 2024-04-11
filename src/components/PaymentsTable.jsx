@@ -1,6 +1,6 @@
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
@@ -13,8 +13,10 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
+import { styled } from "@mui/material/styles";
 import { useRef } from "react";
 import { utils, writeFileXLSX } from "xlsx";
+import * as XLSX from "xlsx";
 import dayjs from "dayjs";
 import { CSVLink } from "react-csv";
 
@@ -50,7 +52,6 @@ const PaymentsTable = () => {
     "Email",
     "RUT",
     "Nombre",
-    "Apellido",
     "Factura",
     "Razón Social",
     "Dirección",
@@ -105,6 +106,41 @@ const PaymentsTable = () => {
     }
   };
 
+  const createXlsx = () => {
+    const xlsxPayments = formatPayments(payments);
+    const worksheet = XLSX.utils.json_to_sheet(xlsxPayments);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.sheet_add_aoa(
+      worksheet,
+      [
+        [
+          "Fecha de Pago",
+          "Orden de Compra",
+          "Cod_Autorización",
+          "Monto",
+          "Email",
+          "RUT",
+          "Nombre",
+          "Factura",
+          "Dirección",
+          "Comuna",
+        ],
+      ],
+      { origin: "A1" }
+    );
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Pagos");
+    XLSX.writeFile(workbook, "Pagos.xlsx", { compression: true });
+  };
+
+  const formatPayments = (arr) => {
+    const formatted = arr.map((el) => ({
+      ...el,
+      fecha_actualizacion: formatDate(el.fecha_actualizacion),
+      es_boleta: !el.es_boleta ? "Sí" : "No",
+    }));
+    return formatted;
+  };
+
   if (isLoading) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", marginTop: 10 }}>
@@ -124,9 +160,9 @@ const PaymentsTable = () => {
   }
 
   return (
-    <div className="container py-2">
-      <TableContainer component={Paper}>
-        <Table ref={tbl}>
+    <div className="container py-2 flex flex-col justify-center">
+      <TableContainer component={Paper} className="">
+        <Table ref={tbl} className="w-full">
           <TableHead>
             <TableRow>
               {headers.map((el, idx) => (
@@ -145,12 +181,18 @@ const PaymentsTable = () => {
               <TableRow key={el.num_orden}>
                 <TableCell>{formatDate(el.fecha_actualizacion)}</TableCell>
                 <TableCell>{el.num_orden}</TableCell>
-                <TableCell>Cod. autorización</TableCell>
+                <TableCell
+                  sx={{
+                    maxWidth: 100,
+                    overflowX: "hidden",
+                  }}
+                >
+                  {el.token}
+                </TableCell>
                 <TableCell>{el.monto}</TableCell>
                 <TableCell>{el.email}</TableCell>
                 <TableCell>{el.rut}</TableCell>
                 <TableCell>{el.nombre}</TableCell>
-                <TableCell>Apellido</TableCell>
                 <TableCell>{!el.es_boleta ? "Sí" : "No"}</TableCell>
                 <TableCell>Razón Social</TableCell>
                 <TableCell>{el.direccion}</TableCell>
@@ -183,25 +225,26 @@ const PaymentsTable = () => {
           ActionsComponent={TablePaginationActions}
         />
       </TableContainer>
-      <Button
-        variant="contained"
-        onClick={() => {
-          // generate workbook from table element
-          const wb = utils.table_to_book(tbl.current, {
-            dateNF: "dd-mm-yyyy;@",
-            cellDates: true,
-            raw: true,
-          });
-          // write to XLSX
-          writeFileXLSX(wb, "SheetJSReactExport.xlsx");
-        }}
-      >
-        Descargar
-      </Button>
-      <Button variant="contained" onClick={downloadCSV}>
-        CSV
-      </Button>
-      <CSVLink data={payments}>Descargar CSV</CSVLink>
+      <div className="py-2 flex flex-row justify-end gap-5">
+        {/* <Button
+          variant="contained"
+          onClick={() => {
+            // generate workbook from table element
+            const wb = utils.table_to_book(tbl.current, {
+              dateNF: "dd-mm-yyyy;@",
+              cellDates: true,
+              raw: true,
+            });
+            // write to XLSX
+            writeFileXLSX(wb, "SheetJSReactExport.xlsx");
+          }}
+        >
+          Descargar
+        </Button> */}
+        <Button variant="contained" onClick={createXlsx}>
+          Descargar
+        </Button>
+      </div>
     </div>
   );
 };
