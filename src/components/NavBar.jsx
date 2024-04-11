@@ -15,8 +15,8 @@ const NavBar = () => {
         </div>
         <div className="flex flex-row justify-end items-center gap-5 p-5 w-1/2">
           <p className="font-semibold">{user.username}</p>
-          <Button onClick={signOut} className="font-semibold text-white">
-            Logout
+          <Button onClick={signOut} color="inherit" sx={{ fontWeight: "bold" }}>
+            Cerrar Sesión
           </Button>
         </div>
       </nav>

@@ -9,7 +9,7 @@ const Payments = () => {
   return route !== "authenticated" ? (
     <Navigate to="/" replace={true} />
   ) : (
-    <div className="p-10">
+    <div className="p-10 flex flex-col items-center">
       <DateRangeFilter />
       <PaymentsTable />
     </div>

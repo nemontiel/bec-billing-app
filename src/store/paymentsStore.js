@@ -14,7 +14,7 @@ const usePaymentsStore = create((set) => ({
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      console.log(JSON.parse(data.body));
+      //console.log(JSON.parse(data.body));
       set({ payments: JSON.parse(data.body), isLoading: false });
     } catch (error) {
       set({ isLoading: false, error: error.message });
@@ -32,7 +32,7 @@ const usePaymentsStore = create((set) => ({
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      console.log(JSON.parse(data.body));
+      //console.log(JSON.parse(data.body));
       set({ payments: JSON.parse(data.body), isLoading: false });
     } catch (error) {
       set({ isLoading: false, error: error.message });

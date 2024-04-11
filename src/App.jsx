@@ -18,6 +18,7 @@ Amplify.configure({
       allowGuestAccess: true,
 
       signUpVerificationMethod: "code",
+      tokenStorage: { duration: 3600 },
       loginWith: {
         oauth: {
           /* domain: "your_cognito_domain",
