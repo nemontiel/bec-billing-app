@@ -5,8 +5,6 @@ import locale from "antd/locale/es_ES";
 import dayjs from "dayjs";
 
 import "dayjs/locale/es-mx";
-import { formats } from "dayjs/locale/es-mx";
-import { useRef } from "react";
 
 const today = dayjs();
 

@@ -1,4 +1,4 @@
-import Button from "@mui/material/Button";
+import { Button } from "antd";
 import { NavLink, Navigate } from "react-router-dom";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 
@@ -14,7 +14,7 @@ const NotFound = () => {
         <p className="text-black p-2">
           Lo sentimos, la página que estás buscando no existe.
         </p>
-        <Button variant="outlined" sx={{}}>
+        <Button>
           <NavLink to="/">Regresar</NavLink>
         </Button>
       </div>
