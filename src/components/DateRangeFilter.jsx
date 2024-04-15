@@ -36,7 +36,7 @@ const DateRangeFilter = () => {
   }
 
   return (
-    <div className="flex flex-col items-start gap-5 py-2 w-full  container ">
+    <div className="flex flex-col items-start gap-5 py-2 container ">
       <div className=" flex flex-col items-start center">
         <div className="">
           <h3 className="text-cyan-600 font-semibold ">
