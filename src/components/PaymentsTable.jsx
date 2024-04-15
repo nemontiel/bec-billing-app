@@ -7,15 +7,8 @@ import dayjs from "dayjs";
 import * as XLSX from "xlsx";
 
 const PaymentsTable = () => {
-  const {
-    payments,
-    isLoading,
-    error,
-    fetchPayments,
-    fetchAuthorized,
-    tableTitle,
-    updateTableTitle,
-  } = usePaymentsStore();
+  const { payments, isLoading, error, fetchAuthorized, tableTitle } =
+    usePaymentsStore();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -210,7 +203,7 @@ const PaymentsTable = () => {
       } else if (metadatos !== null && metadatos.details !== undefined) {
         codigo = metadatos.details[0].authorization_code;
       } else {
-        codigo = ""; // Otra opción si no se encuentra el estado
+        codigo = "";
       }
 
       return {
@@ -297,9 +290,9 @@ const PaymentsTable = () => {
           scroll={{ x: "max-content" }}
         />
       </div>
-      <div className="flex flex-row justify-end py-5">
+      <div className="flex flex-row justify-end py-5 gap-5">
         <Button onClick={createXlsx} size="large">
-          Exportar a Excel
+          Exportar datos
         </Button>
       </div>
     </div>
