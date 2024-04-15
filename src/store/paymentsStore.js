@@ -6,6 +6,8 @@ const usePaymentsStore = create((set) => ({
   payments: [],
   isLoading: false,
   error: null,
+  tableTitle: "Autorizados",
+  updateTableTitle: (newTitle) => set({ tableTitle: newTitle }),
   fetchPayments: async () => {
     try {
       set({ isLoading: true, error: null });
@@ -39,7 +41,21 @@ const usePaymentsStore = create((set) => ({
       console.error("Error fetching payments:", error);
     }
   },
-  //updatePayments: (payments) => set(() => payments),
+  fetchAuthorized: async () => {
+    try {
+      set({ isLoading: true, error: null });
+      const response = await fetch(paymentsUrl + "authorized/");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      // console.log(JSON.parse(data.body));
+      set({ payments: JSON.parse(data.body), isLoading: false });
+    } catch (error) {
+      set({ isLoading: false, error: error.message });
+      console.error("Error fetching payments:", error);
+    }
+  },
 }));
 
 export default usePaymentsStore;

@@ -1,68 +1,74 @@
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
 import { useState } from "react";
-import Paper from "@mui/material/Paper";
+import { DatePicker, ConfigProvider, Button } from "antd";
 import usePaymentsStore from "../store/paymentsStore";
-import "dayjs/locale/es";
+import locale from "antd/locale/es_ES";
 import dayjs from "dayjs";
 
+import "dayjs/locale/es-mx";
+import { formats } from "dayjs/locale/es-mx";
+import { useRef } from "react";
+
+const today = dayjs();
+
+const { RangePicker } = DatePicker;
+
 const DateRangeFilter = () => {
-  const today = dayjs();
   const [start, setStart] = useState(today);
   const [end, setEnd] = useState(today);
-  const { fetchDateRange, fetchPayments } = usePaymentsStore();
+  const [titleDates, setTitleDates] = useState([]);
+  const { fetchDateRange, fetchPayments, updateTableTitle } =
+    usePaymentsStore();
 
+  const handlePickerChange = (dates, dateStrings) => {
+    const [start, end] = dateStrings;
+    setTitleDates(dateStrings);
+    const queryDateStart = dayjs(start, "DD-MM-YYYY");
+    const queryDateEnd = dayjs(end, "DD-MM-YYYY");
+    setStart(queryDateStart.format("YYYY-MM-DD"));
+    setEnd(queryDateEnd.format("YYYY-MM-DD"));
+  };
   function handleRangeClick() {
     fetchDateRange(start, end);
+    updateTableTitle(`Pagos del ${titleDates[0]} al ${titleDates[1]}`);
   }
 
-  function handleResetClick() {
-    setStart(today);
-    setEnd(today);
+  function handleAllClick() {
     fetchPayments();
+    updateTableTitle("Todos los pagos");
   }
 
   return (
-    <Box
-      className="flex flex-col items-start gap-5 py-2 w-full p-5 container"
-      component={Paper}
-    >
-      <div>
-        <h3 className="text-cyan-600 font-semibold ">
-          Filtrar por rango de fechas
+    <div className="flex flex-col items-start gap-5 py-2 w-full  container ">
+      <div className=" flex flex-col items-start center">
+        <div className="">
+          <h3 className="text-cyan-600 font-semibold ">
+            Filtrar por rango de fechas
+          </h3>
+        </div>
+        <div className="flex flex-row justify-center items-center gap-5">
+          <ConfigProvider locale={locale}>
+            <RangePicker
+              format={"DD-MM-YYYY"}
+              onChange={handlePickerChange}
+              size="large"
+            />
+          </ConfigProvider>
+          <Button onClick={handleRangeClick} size="large">
+            Buscar
+          </Button>
+        </div>
+      </div>
+
+      <div className="flex flex-row justify-start gap-5 items-center ">
+        <h3 className=" text-cyan-600 font-semibold ">
+          Consultar todos los registros
         </h3>
-      </div>
-      <div className="flex flex-row justify-center items-center gap-5">
-        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
-          <DatePicker
-            label="Desde"
-            onChange={(e) => setStart(e.$d.toISOString().split("T")[0])}
-          />
-          <DatePicker
-            label="Hasta"
-            onChange={(e) => setEnd(e.$d.toISOString().split("T")[0])}
-            maxDate={today}
-            size="small"
-          />
-        </LocalizationProvider>
-        <Button
-          variant="contained"
-          disableElevation
-          onClick={handleRangeClick}
-          sx={{ height: 36, backgroundColor: "#008fbe" }}
-        >
-          Buscar
+        <Button onClick={handleAllClick} size="large">
+          Consultar
         </Button>
       </div>
-      <div>
-        <Button variant="outlined" onClick={handleResetClick}>
-          Ver todos
-        </Button>
-      </div>
-    </Box>
+    </div>
   );
 };
+
 export default DateRangeFilter;

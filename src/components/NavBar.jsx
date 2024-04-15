@@ -1,6 +1,5 @@
 import { useAuthenticator } from "@aws-amplify/ui-react";
-import { Button } from "@mui/material";
-import "../styles/navBar.css";
+import { Button } from "antd";
 
 const NavBar = () => {
   const { route, user, signOut } = useAuthenticator((context) => [
@@ -18,9 +17,7 @@ const NavBar = () => {
         </div>
         <div className="flex flex-row justify-end items-center gap-5 p-5 w-1/2">
           <p className="font-semibold">{user.username}</p>
-          <Button onClick={signOut} color="inherit" sx={{ fontWeight: "bold" }}>
-            Cerrar Sesión
-          </Button>
+          <Button onClick={signOut}>Cerrar Sesión</Button>
         </div>
       </nav>
     );

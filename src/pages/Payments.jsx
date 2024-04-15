@@ -1,7 +1,8 @@
 import { Navigate } from "react-router-dom";
+import { useAuthenticator } from "@aws-amplify/ui-react";
+
 import PaymentsTable from "../components/PaymentsTable";
 import DateRangeFilter from "../components/DateRangeFilter";
-import { useAuthenticator } from "@aws-amplify/ui-react";
 
 const Payments = () => {
   const { route } = useAuthenticator((context) => [context.route]);
@@ -9,7 +10,7 @@ const Payments = () => {
   return route !== "authenticated" ? (
     <Navigate to="/" replace={true} />
   ) : (
-    <div className="p-10 flex flex-col items-center">
+    <div className="pt-10 flex flex-col items-center">
       <DateRangeFilter />
       <PaymentsTable />
     </div>

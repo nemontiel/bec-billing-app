@@ -1,10 +1,10 @@
 import Button from "@mui/material/Button";
-import { Navigate, NavLink } from "react-router-dom";
+import { NavLink, Navigate } from "react-router-dom";
+import { useAuthenticator } from "@aws-amplify/ui-react";
 
 const NotFound = () => {
-  const handleClick = () => {
-    <Navigate to="/" />;
-  };
+  const { route } = useAuthenticator((context) => [context.route]);
+
   return (
     <div className="flex flex-col h-screen w-full justify-center">
       <div className="">
@@ -14,7 +14,7 @@ const NotFound = () => {
         <p className="text-black p-2">
           Lo sentimos, la página que estás buscando no existe.
         </p>
-        <Button onClick={handleClick} variant="outlined" sx={{}}>
+        <Button variant="outlined" sx={{}}>
           <NavLink to="/">Regresar</NavLink>
         </Button>
       </div>
