@@ -7,36 +7,9 @@ import { Navigate } from "react-router-dom";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 
 import "./App.css";
-//import awsExports from "./aws-exports";
-Amplify.configure({
-  Auth: {
-    Cognito: {
-      userPoolId: import.meta.env.VITE_USER_POOL_ID,
+import awsExports from "./aws-exports";
 
-      userPoolClientId: import.meta.env.VITE_USER_POOL_CLIENT_ID,
-
-      allowGuestAccess: true,
-
-      signUpVerificationMethod: "code",
-      tokenStorage: { duration: 3600 },
-      loginWith: {
-        oauth: {
-          /* domain: "your_cognito_domain",
-          scopes: [
-            "phone",
-            "email",
-            "profile",
-            "openid",
-            "aws.cognito.signin.user.admin",
-          ], 
-          redirectSignIn: ["http://localhost:5173/pagos/"],
-          redirectSignOut: ["http://localhost:5173/"],*/
-          responseType: "code", // or 'token', note that REFRESH token will only be generated when the responseType is code
-        },
-      },
-    },
-  },
-});
+Amplify.configure(awsExports);
 
 I18n.setLanguage("es");
 
